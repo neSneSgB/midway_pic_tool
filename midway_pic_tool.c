@@ -4,7 +4,7 @@
 //Tool to read and (optionally) modify serial number and/or date from PIC16F57 dump used in many Atari/Midway games
 //by Pat Daderko (DogP) based on MAME midway_serial_pic_device::generate_serial_data from midwayic.cpp by Aaron Giles
 //
-//Usage: midway_pic_tool <filename> [new SN (0-999999999)] [new MM (1-12)] [new DD (1-31)] [new YYYY (1980-2155)]
+//Usage: midway_pic_tool <filename> [new SN (0-999999999)] [new MM (1-12)] [new DD (0-30)] [new YYYY (1980-2155)]
 //Enter '-' to leave parameter unchanged
 
 #include <stdio.h>
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     //print usage?
     if ((argc < 2) || (argc > 6))
     {
-        printf("Usage: %s <filename> [new SN (0-999999)] [new MM (1-12)] [new DD (1-31)] [new YYYY (1980-2155)]\nEnter '-' to leave parameter unchanged\nNOTE: Entering new values modifies original file\n", argv[0]);
+        printf("Usage: %s <filename> [new SN (0-999999)] [new MM (1-12)] [new DD (0-30)] [new YYYY (1980-2155)]\nEnter '-' to leave parameter unchanged\nNOTE: Entering new values modifies original file\n", argv[0]);
         printf("The first 3 digits of the serial (game ID) will not be modified\nPass \"random\" in as a serial number to generate a random number\n");
         return 1;
     }
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
     year = (temp / 0x174) + 1980;
     temp -= ((year - 1980) * 0x174);
     month = (temp / 0x1f) + 1;
-    day = temp - ((month - 1) * 0x1f) + 1;
+    day = temp - ((month - 1) * 0x1f);
 
     printf("Original date: %02d/%02d/%04d\n", month, day, year);
 
