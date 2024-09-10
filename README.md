@@ -6,7 +6,7 @@ by Pat Daderko (DogP) based on MAME midway_serial_pic_device::generate_serial_da
 Enter '-' to leave parameter unchanged
 Enter 'random' as a serial number parameter to receive a random number
 
-Repository includes C source code and precompiled Windows executable, and Python port.
+Repository includes C source code and precompiled Windows executable.
 
 **NOTES:**
 * Entering new values modifies original file  
