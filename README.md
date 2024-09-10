@@ -1,4 +1,7 @@
 # midway_pic_tool
+
+A more up-to-date Python port can be found here: https://github.com/neSneSgB/midway_pic_tool_py, this repository mainly serves as an archive of the original C version that I modified before porting it.
+
 Tool to read and (optionally) modify serial number and/or date from PIC16F57 dump used in many Atari/Midway games  
 by Pat Daderko (DogP) based on MAME midway_serial_pic_device::generate_serial_data from midwayic.cpp by Aaron Giles, extra functionalities added by neSneSgB  
 
@@ -14,3 +17,4 @@ Repository includes C source code and precompiled Windows executable.
 * This version includes a randomization function to provide a random serial, and the ability to modify the first 3 numbers of the serial has been disabled, as some games verify this ID and will refuse to work if it is wrong.
 
 The license for this code is BSD 3-Clause as it uses BSD 3-Clause licensed code from MAME midwayic.cpp by Aaron Giles.
+
