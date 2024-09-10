@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-#Atari/Midway/Williams Security PIC Tool
-#Original algorithm written by Aaron Giles for MAME's midwayic.c::generate_serial_data, 2007
-#Reworked by Pat Daderko (DogP) to a standalone C program, 2022
-#Modified and ported to Python by neSneSgB, 2024
+"""Atari/Midway/Williams Security PIC Tool
+Original algorithm written by Aaron Giles for MAME's midwayic.c::generate_serial_data, 2007
+Reworked by Pat Daderko (DogP) to a standalone C program, 2022
+Modified and ported to Python by neSneSgB, 2024"""
 import os
 import sys
 import random
@@ -14,16 +14,17 @@ import shutil
 pic_size = 31
 pic_data = [0] * 16
 serial_digit = [0] * 9
-modfile = 0
+modify_file = 0
 
 parser = argparse.ArgumentParser(description='Atari/Midway/Williams Security PIC Tool\n\nNew values modify original file unless -n is specified\n'
-                                                                                              'The first 3 digits of the serial (game ID) will not be modified\n'
+                                                                                              'The first 3 digits of the serial (game ID) will not be modified unless --change-gameid is specified\n'
                                                                                               'Filename only will print PIC information', formatter_class=RawTextHelpFormatter)
 parser.add_argument('filename')
 parser.add_argument('-s', '--serial', help='New SN (0-999999), "random" to generate a random number')
 parser.add_argument('-m', '--month', help='New MM (1-12)', type=int)
 parser.add_argument('-d', '--day', help='New DD (0-30)', type=int)
 parser.add_argument('-y', '--year', help='New YYYY (1980-2155)', type=int)
+parser.add_argument('--gameid', help='New game ID (000-999), can prevent game from booting if mismatched', type=int)
 parser.add_argument('-n', '--new', help='Create new copy instead of modifying original file', action='store_true')
 args = parser.parse_args()
 input_pic = args.filename
@@ -33,10 +34,9 @@ if os.path.getsize(input_pic) < pic_size:
     print ("Error: File size too small.")
     sys.exit(1)
 
-
-#PIC data is scrambled in flash dump (order looks to be identical for all dumps)
-#from disassembly of PIC code, order from flash dump to pic_data array (0-15) is: 6, 14, 3, 8, 0, 12, 7, 9, 11, 1, 15, 4, 2, 10, 5, 13
-#need to skip RETLW opcodes (0x08) in file
+"""PIC data is scrambled in flash dump (order looks to be identical for all dumps)
+from disassembly of PIC code, order from flash dump to pic_data array (0-15) is: 6, 14, 3, 8, 0, 12, 7, 9, 11, 1, 15, 4, 2, 10, 5, 13
+need to skip RETLW opcodes (0x08) in file"""
 with open(input_pic, 'r+b') as pic:
     pic.seek(6*2)
     pic_data[0] = pic.read(1)[0]
@@ -92,76 +92,76 @@ with open(input_pic, 'r+b') as pic:
 
     match serial_gameid:
         case 231:
-            gametitle = "Bio F.R.E.A.K.S"
+            game_title = "Bio F.R.E.A.K.S"
         case 236:
-            gametitle = "Off Road Challenge"
+            game_title = "Off Road Challenge"
         case 310:
-            gametitle = "Wayne Gretzky's 3D Hockey"
+            game_title = "Wayne Gretzky's 3D Hockey"
         case 314:
-            gametitle = "Mace: The Dark Age"
+            game_title = "Mace: The Dark Age"
         case 315:
-            gametitle = "San Francisco Rush"
+            game_title = "San Francisco Rush"
         case 322:
-            gametitle = "Gauntlet Legends"
+            game_title = "Gauntlet Legends"
         case 324:
-            gametitle = "Vapor TRX"
+            game_title = "Vapor TRX"
         case 328:
-            gametitle = "California Speed"
+            game_title = "California Speed"
         case 330:
-            gametitle = "Tenth Degree"
+            game_title = "Tenth Degree"
         case 331:
-            gametitle = "San Francisco Rush The Rock: Alcatraz Edition"
+            game_title = "San Francisco Rush The Rock: Alcatraz Edition"
         case 336:
-            gametitle = "San Francisco Rush 2049"
+            game_title = "San Francisco Rush 2049"
         case 342:
-            gametitle = "Midway Skins Game"
+            game_title = "Midway Skins Game"
         case 346:
-            gametitle = "Gauntlet Dark Legacy"
+            game_title = "Gauntlet Dark Legacy"
         case 348:
-            gametitle = "San Francisco Rush 2049 Tournament Edition"
+            game_title = "San Francisco Rush 2049 Tournament Edition"
         case 352:
-            gametitle = "San Francisco Rush 2049 Special Edition"
+            game_title = "San Francisco Rush 2049 Special Edition"
         case 419:
-            gametitle = "Revolution X"
+            game_title = "Revolution X"
         case 430:
-            gametitle = "WWF Wrestlemania"
+            game_title = "WWF Wrestlemania"
         case 439:
-            gametitle = "Mortal Kombat 3"
+            game_title = "Mortal Kombat 3"
         case 444:
-            gametitle = "NFL Blitz"
+            game_title = "NFL Blitz"
         case 449:
-            gametitle = "Cruis'n World"
+            game_title = "Cruis'n World"
         case 452:
-            gametitle = "War Gods"
+            game_title = "War Gods"
         case 459:
-            gametitle = "NBA Hangtime"
+            game_title = "NBA Hangtime"
         case 461:
-            gametitle = "Mortal Kombat 4"
+            game_title = "Mortal Kombat 4"
         case 463:
-            gametitle = "Ultimate Mortal Kombat 3"
+            game_title = "Ultimate Mortal Kombat 3"
         case 465:
-            gametitle = "Rampage World Tour"
+            game_title = "Rampage World Tour"
         case 467:
-            gametitle = "NBA Showtime"
+            game_title = "NBA Showtime"
         case 468:
-            gametitle = "Invasion: The Abductors"
+            game_title = "Invasion: The Abductors"
         case 471:
-            gametitle = "Hyperdrive"
+            game_title = "Hyperdrive"
         case 472:
-            gametitle = "Cruis'n Exotica"
+            game_title = "Cruis'n Exotica"
         case 481:
-            gametitle = "NFL Blitz '99"
+            game_title = "NFL Blitz '99"
         case 486:
-            gametitle = "Carnevil"
+            game_title = "Carnevil"
         case 491:
-            gametitle = "The Grid"
+            game_title = "The Grid"
         case 494:
-            gametitle = "NFL Blitz 2000"
+            game_title = "NFL Blitz 2000"
         case 528:
-            gametitle = "Development PIC"
+            game_title = "Development PIC"
         case _:
-            gametitle = "Unknown game"
-    print (f'Game detected: {gametitle}')
+            game_title = "Unknown game"
+    print (f'Game detected: {game_title}')
     print(f'Original S/N: {"".join(map(str, serial_digit))}')
 
     #determine original date
@@ -172,34 +172,40 @@ with open(input_pic, 'r+b') as pic:
     day = int(temp - ((month - 1) * 0x1f))  #day appears to be 0-30, not 1-31 (as displayed by Rush games at least)
     print(f'Original date: {month}/{day}/{year}')
 
+    if args.gameid: #change game id if requested
+        temp = args.gameid
+        if 0 <= temp <= 999:
+            serial_gameid = temp
+            modify_file = 1
+        else:
+            print("Warning: Invalid game ID entered\nGame ID not modified")
+        
     if args.serial: #change serial if requested
-        modfile = 1
+        modify_file = 1
         if args.serial == 'random':
             print ("Random serial requested")
             temp = random.randint(0,999999)
-        elif args.serial.isdecimal():
+        elif args.serial.isdecimal() or int(args.serial) > 999999:
             temp = int(args.serial)
         else: #other string input
             print("Warning: Invalid serial entered\nSerial not modified")
             temp = serial_number
-            modfile = 0
+            modify_file = 0
         serial_number = temp
 
     if args.month: #change month if requested
         temp = args.month
         if 1 <= temp <= 12:
             month = temp
-            modfile = 1
+            modify_file = 1
         else:
             print("Warning: Invalid month entered\nMonth not modified")
 
     if args.day: #change day if requested
         temp = args.day
-        #if temp == 31: #user might have forgotten that the range is 0-30, not 1-31
-        #    temp = 30
         if 0 <= temp <= 30:
             day = temp
-            modfile = 1
+            modify_file = 1
         else:
             print("Warning: Invalid day entered\nDay not modified")
 
@@ -207,17 +213,21 @@ with open(input_pic, 'r+b') as pic:
         temp = args.year
         if 1980 <= temp <= 2155:
             year = temp
-            modfile = 1
+            modify_file = 1
         else:
             print("Warning: Invalid year entered\nYear not modified")
 
-    if modfile == 1: #if any values changed, update and modify file
+    if modify_file == 1: #if any values changed, update and modify file
+        serial_digit[0] = int((serial_gameid / 100) % 10)
+        serial_digit[1] = int((serial_gameid / 10) % 10)
+        serial_digit[2] = int((serial_gameid / 1) % 10)
         serial_digit[3] = int((serial_number / 100000) % 10)
         serial_digit[4] = int((serial_number / 10000) % 10)
         serial_digit[5] = int((serial_number / 1000) % 10)
         serial_digit[6] = int((serial_number / 100) % 10)
         serial_digit[7] = int((serial_number / 10) % 10)
         serial_digit[8] = int((serial_number / 1) % 10)
+        
         temp = ((serial_digit[4] + serial_digit[7] * 10 + serial_digit[1] * 100) + 5 * pic_data[13]) * 0x1bcd + 0x1f3f0
         pic_data[7] = temp & 0xff
         pic_data[8] = (temp >> 8) & 0xff
@@ -239,14 +249,15 @@ with open(input_pic, 'r+b') as pic:
         pic_data[11] = temp & 0xff
 
         if args.new: # new file requested
-            oldpic = os.path.splitext(input_pic)
-            newpic = oldpic[0] + "_" + "".join(map(str, serial_digit)) + "_" + str(month) + "_" + str(day) + "_" + str(year)
-            newpic = newpic + oldpic[1]
-            picmod = open(newpic, 'x')
-            shutil.copyfile(args.filename, newpic)
+            old_pic = os.path.splitext(input_pic)
+            new_pic = old_pic[0] + "_" + "".join(map(str, serial_digit)) + "_" + str(month) + "_" + str(day) + "_" + str(year)
+            new_pic = new_pic + old_pic[1]
+            pic_mod = open(new_pic, 'x')
+            shutil.copyfile(args.filename, new_pic)
             pic.close()
-            picmod.close()
-            pic = open(newpic, 'r+b') # open new pic in place of original
+            pic_mod.close()
+            pic = open(new_pic, 'r+b') # open new pic in place of original
+
         # put pic_data into file
         pic.seek(6*2)
         pic.write(pic_data[0].to_bytes(1, byteorder='little'))
@@ -280,9 +291,9 @@ with open(input_pic, 'r+b') as pic:
         pic.write(pic_data[14].to_bytes(1, byteorder='little')) #looks to be unused
         pic.seek(13*2)
         pic.write(pic_data[15].to_bytes(1, byteorder='little')) #looks to be unused
-
+        
         print(f'New S/N: {"".join(map(str, serial_digit))}')
         print(f'New Date: {month}/{day}/{year}')
         print(f'Saving to {pic.name}')
-        pic.close()
-        sys.exit(0)
+    pic.close()
+    sys.exit(0)
